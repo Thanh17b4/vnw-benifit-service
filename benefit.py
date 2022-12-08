@@ -1,11 +1,10 @@
+from fastapi import APIRouter, Response
+from slugify import slugify
 from starlette import status
 
-from benefits.schemas import Benefit, BenefitResult
-from categories.schemas import CategoryListResult, Category
-from model.check_data import is_blank
 from config import mydb
-from slugify import slugify
-from fastapi import APIRouter, Response
+from model.check_data import is_blank
+from schemas import Benefit, BenefitResult, BenefitListResult
 
 benefit_router = APIRouter()
 
@@ -67,12 +66,12 @@ def all_benefit(page: int, limit: int, response: Response):
         if benefits is None:
             response.status_code = status.HTTP_400_BAD_REQUEST
             return f"query was wrong"
-        return CategoryListResult(benefits)
+        return BenefitListResult(benefits)
 
 
 @benefit_router.put('/benefit/update/{id}', status_code=200)
-async def update_benefit(id: int, req: Category, response: Response):
-    benefit = req.category_to_dict()
+async def update_benefit(id: int, req: Benefit, response: Response):
+    benefit = req.benefit_to_dict()
     boolean, result = detail_benefit(id, response)
     if boolean is False:
         response.status_code = status.HTTP_400_BAD_REQUEST

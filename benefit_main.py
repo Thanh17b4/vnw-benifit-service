@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-from benefits.benefit import benefit_router
+from benefit import benefit_router
 
 app = FastAPI()
 
