@@ -1,9 +1,19 @@
-import psycopg2
+from dotenv import load_dotenv, dotenv_values
+from pydantic import BaseSettings
 
-mydb = psycopg2.connect(
-    host="localhost",
-    port=3210,
-    database="benefit_service",
-    user="thanhpv",
-    password="22121992"
-)
+load_dotenv()
+
+
+class Settings(BaseSettings):
+    PG_HOST: str
+    PG_PORT: str
+    PG_DATABASE: str
+    PG_USER: str
+    PG_PASSWORD: str
+
+    class Config:
+        config = dotenv_values(".env")
+
+
+settings = Settings()
+

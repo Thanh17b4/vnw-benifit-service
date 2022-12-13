@@ -2,14 +2,14 @@ from fastapi import APIRouter, Response
 from slugify import slugify
 from starlette import status
 
-from config import mydb
+from db import mydb
 from model.check_data import is_blank
 from schemas import Benefit, BenefitResult, BenefitListResult
 
 benefit_router = APIRouter()
 
 
-@benefit_router.post('/benefit/create/', status_code=201)
+@benefit_router.post('/benefit', status_code=201)
 def create_benefit(request: Benefit, response: Response):
     benefit = request.benefit_to_dict()
     # Validate data
@@ -34,7 +34,7 @@ def __validate(req: dict):
     return req, ""
 
 
-@benefit_router.get('/benefit/detail/{id}', status_code=200)
+@benefit_router.get('/benefit/{id}', status_code=200)
 def detail_benefit(id: int, response: Response):
     with mydb:
         my_cursor = mydb.cursor()
@@ -46,7 +46,7 @@ def detail_benefit(id: int, response: Response):
         return True, BenefitResult(benefit)
 
 
-@benefit_router.get('/benefit/all/', status_code=200)
+@benefit_router.get('/benefit', status_code=200)
 def all_benefit(page: int, limit: int, response: Response):
     with mydb:
         my_cursor = mydb.cursor()
@@ -69,7 +69,7 @@ def all_benefit(page: int, limit: int, response: Response):
         return BenefitListResult(benefits)
 
 
-@benefit_router.put('/benefit/update/{id}', status_code=200)
+@benefit_router.put('/benefit/{id}', status_code=200)
 async def update_benefit(id: int, req: Benefit, response: Response):
     benefit = req.benefit_to_dict()
     boolean, result = detail_benefit(id, response)
@@ -96,7 +96,7 @@ def __check_changes(req: dict, new_req: dict):
     return new_req, ""
 
 
-@benefit_router.delete('/benefit/delete/{id}', status_code=200)
+@benefit_router.delete('/benefit/{id}', status_code=200)
 async def delete_benefit(id: int, response: Response):
     boolean, result = detail_benefit(id, response)
     if boolean is False:
