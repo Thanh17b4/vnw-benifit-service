@@ -69,7 +69,7 @@ def all_benefit(page: int, limit: int, response: Response):
         return BenefitListResult(benefits)
 
 
-@benefit_router.put('/benefit/{id}', status_code=200)
+@benefit_router.put('/benefit/{id}', status_code=201)
 async def update_benefit(id: int, req: Benefit, response: Response):
     benefit = req.benefit_to_dict()
     boolean, result = detail_benefit(id, response)
@@ -96,7 +96,7 @@ def __check_changes(req: dict, new_req: dict):
     return new_req, ""
 
 
-@benefit_router.delete('/benefit/{id}', status_code=200)
+@benefit_router.delete('/benefit/{id}', status_code=204)
 async def delete_benefit(id: int, response: Response):
     boolean, result = detail_benefit(id, response)
     if boolean is False:
